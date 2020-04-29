@@ -1,4 +1,4 @@
-# IGListKitEditorCrash
+# Source Editor Crash with IGListKit 4.0.0
 
 Project that demonstrates a source editor crash that disables the autocomplete and living issues functionality when
 we migrated an app to IGListKit 4.0.0
@@ -29,3 +29,46 @@ the path: `InnerPod/InnerPod.podspec` and the source code in the path: `InnerPod
 
 When you build the project it compiles without any error:
 
+![compilation1](screenshots/compilation1.png)
+
+But if you try to autocomplete a function SourceKit crashes and Xcode shows the error "An internal error ocurred. Source editor functionalty is limited. Attemping to restore..."
+
+![autocomplete1](screenshots/autocomplete1.png)
+
+------
+
+Branch: downgrade
+
+After a lot investigation I found that IGListKit was causing this, so I downgraded to version 3.4.0 and in that version there is no issue
+
+It compiles correctly:
+
+![compilation2](screenshots/compilation2.png)
+
+And it autocompletes correctly:
+
+![autocomplete2](screenshots/autocomplete2.png)
+
+------
+
+Branch: solution
+
+I made a lot of tests, and it seems that this error was only affecting us with specific conditions, it is the sum of static libraries + an NSObject extension (file: NSObject+IGListDiffable.swift) + IGListKit 4.0.0
+
+I want the advantages of IGListKit 4.0.0 and leaving out static libraries is not an option for us so I took many time to found out another way to solve it, I finally found that this extension was interfering somehow, and I changed the code from swift to objective-c and it solved the issue.
+
+Original file:
+
+![original](screenshots/original.png)
+
+New objective-c files:
+
+![change](screenshots/change.png)
+
+It compiles:
+
+![compilation3](screenshots/compilation3.png)
+
+And it autocompletes:
+
+![autocomplete3](screenshots/autocomplete3.png)
