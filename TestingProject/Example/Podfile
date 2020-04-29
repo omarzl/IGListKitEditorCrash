@@ -6,6 +6,6 @@ use_modular_headers!
 target 'TestingProject_Example' do
   pod 'TestingProject', :path => '../'
   
-  pod 'IGListKit', '4.0.0'
+  pod 'IGListKit', '3.4.0'
   pod 'InnerPod', :path => '../../InnerPod'
 end
